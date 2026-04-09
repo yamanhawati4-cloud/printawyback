@@ -18,6 +18,7 @@ namespace Printawyapis.Controllers
             _context = context;
         }
 
+        // GET: api/products
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
@@ -34,13 +35,7 @@ namespace Printawyapis.Controllers
 
             bool isValid = request.Password == ProductApiPassword;
             return Ok(new { success = isValid });
-        }       
-
-// Create a request model for clarity
-public class PasswordRequest
-{
-    public string Password { get; set; }
-}
+        }
 
         // POST: api/products
         [HttpPost]
@@ -48,7 +43,6 @@ public class PasswordRequest
             [FromHeader(Name = "X-Api-Password")] string apiPassword,
             [FromBody] Product product)
         {
-            // Check password
             if (apiPassword != ProductApiPassword)
                 return Unauthorized("Invalid API password.");
 
@@ -63,5 +57,67 @@ public class PasswordRequest
 
             return CreatedAtAction(nameof(GetAllProducts), new { id = product.Id }, product);
         }
+
+
+
+        [HttpGet("{id}")]
+public async Task<IActionResult> GetProductById(int id)
+{
+    var product = await _context.Products.FindAsync(id);
+
+    if (product == null)
+        return NotFound("Product not found.");
+
+    return Ok(product);
+}
+
+        // PUT: api/products/{id}  --> Edit product
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditProduct(
+            int id,
+            [FromHeader(Name = "X-Api-Password")] string apiPassword,
+            [FromBody] Product updatedProduct)
+        {
+            if (apiPassword != ProductApiPassword)
+                return Unauthorized("Invalid API password.");
+
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound("Product not found.");
+
+            // Update fields
+            product.Name = updatedProduct.Name;
+            product.Description = updatedProduct.Description;
+            product.Price = updatedProduct.Price;
+            product.Photo = updatedProduct.Photo;
+
+            await _context.SaveChangesAsync();
+            return Ok(product);
+        }
+
+        // DELETE: api/products/{id}  --> Delete product
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(
+            int id,
+            [FromHeader(Name = "X-Api-Password")] string apiPassword)
+        {
+            if (apiPassword != ProductApiPassword)
+                return Unauthorized("Invalid API password.");
+
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound("Product not found.");
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+    }
+
+    // Request model for password
+    public class PasswordRequest
+    {
+        public string Password { get; set; }
     }
 }
