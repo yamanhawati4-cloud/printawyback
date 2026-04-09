@@ -1,28 +1,29 @@
-using System.ComponentModel.DataAnnotations;
-using System.Dynamic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Printawyapis.Data;
 
 namespace Printawyapis.Controllers
 {
-    [ApiController]                    // Marks this class as an API controller
-    [Route("api/[controller]")]        // Route will be: /api/users
-    public class Products : ControllerBase
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProductsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetAllProducts()
+        private readonly AppDbContext _context;
+
+        public ProductsController(AppDbContext context)
         {
-            var products = new[]
-            {
-                new { Id = 1, Price = 350, Name = "Summer T-shirt" , Description = "Customizable Summer T-shirt", Photo = "https://cdn11.bigcommerce.com/s-ycdesmekc9/images/stencil/640w/products/442/9693/5030_BOX_TEE_MUSHROOM_THUMB__02517.1.jpg"},
-                new { Id = 2, Price = 500, Name = "Polo T-shirt" , Description = "Customizable Polo T-shirt", Photo = "https://m.media-amazon.com/images/I/51K5IcK9MRL._AC_SX385_.jpg"},
-                new { Id = 3, Price = 230, Name = "chemise" , Description = "Customizable chemise", Photo = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8aWRPt3C3shZzZcQ-cuMo7EhTrTZlCGc5lg&s"},
-            };
-            return Ok(products);          // Returns HTTP 200 with JSON
+            _context = context;
         }
-        
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            var products = await _context.Products.ToListAsync();
+            return Ok(products);
+        }
     }
 
-    // Example model
+    // Product model
     public class Product
     {
         public int Id { get; set; }

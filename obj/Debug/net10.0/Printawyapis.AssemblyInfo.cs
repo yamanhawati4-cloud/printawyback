@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Printawyapis")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5fd74984f1c3d1efc7b9ebdbc509772b8d099fdc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Printawyapis")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Printawyapis")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
