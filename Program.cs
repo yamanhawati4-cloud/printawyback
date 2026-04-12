@@ -37,6 +37,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // ✅ CORS
+// ✅ CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -47,16 +48,18 @@ builder.Services.AddCors(options =>
     });
 });
 
+var app = builder.Build();
+
+// ✅ Middleware
+app.UseCors("AllowAll");
+
 // ✅ Controllers + Swagger
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
 
-// ✅ Middleware
-app.UseCors("AllowAngular");
 
 app.UseSwagger();
 app.UseSwaggerUI();
