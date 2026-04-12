@@ -1,22 +1,15 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Printawyapis.Data;
-using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ DbContext (USE ONLY ONE DATABASE)
+// Db
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
-// ✅ Identity
+// Identity
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// ✅ JWT
+// JWT
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
 builder.Services.AddAuthentication(options =>
@@ -36,8 +29,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// ✅ CORS
-// ✅ CORS
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -48,18 +40,18 @@ builder.Services.AddCors(options =>
     });
 });
 
-var app = builder.Build();
-
-// ✅ Middleware
-app.UseCors("AllowAll");
-
-// ✅ Controllers + Swagger
+// ✅ MOVE THESE HERE
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+// BUILD
+var app = builder.Build();
+
+// Middleware
+app.UseCors("AllowAll");
 
 app.UseSwagger();
 app.UseSwaggerUI();
