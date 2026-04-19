@@ -3274,11 +3274,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\printawy\\Printawyapis\\Printawyapis.csproj",
+      "projectUniqueName": "D:\\printawybackend\\Printawyapis.csproj",
       "projectName": "Printawyapis",
-      "projectPath": "D:\\printawy\\Printawyapis\\Printawyapis.csproj",
+      "projectPath": "D:\\printawybackend\\Printawyapis.csproj",
       "packagesPath": "C:\\Users\\games\\.nuget\\packages\\",
-      "outputPath": "D:\\printawy\\Printawyapis\\obj\\",
+      "outputPath": "D:\\printawybackend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
