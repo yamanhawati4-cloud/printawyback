@@ -93,6 +93,16 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // =====================
 // MIDDLEWARE PIPELINE
 // =====================
