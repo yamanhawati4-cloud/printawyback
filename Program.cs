@@ -91,7 +91,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-var app = builder.Build();
 
 builder.Services.AddCors(options =>
 {
@@ -102,6 +101,10 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+var app = builder.Build();
+
+
 
 // =====================
 // MIDDLEWARE PIPELINE
