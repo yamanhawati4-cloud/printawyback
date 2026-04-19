@@ -1,3 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
+
+using Printawyapis.Data;
+using Printawyapis.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // DATABASE
