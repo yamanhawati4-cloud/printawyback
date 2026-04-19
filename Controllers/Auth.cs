@@ -33,17 +33,22 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(string email, string password)
+public async Task<IActionResult> Login(string email, string password)
+{
+    var user = await _userManager.FindByEmailAsync(email);
+
+    if (user == null || !await _userManager.CheckPasswordAsync(user, password))
+        return Unauthorized("Invalid credentials");
+
+    var token = GenerateJwtToken(user);
+
+    return Ok(new
     {
-        var user = await _userManager.FindByEmailAsync(email);
-
-        if (user == null || !await _userManager.CheckPasswordAsync(user, password))
-            return Unauthorized("Invalid credentials");
-
-        var token = GenerateJwtToken(user);
-
-        return Ok(new { token });
-    }
+        token,
+        userId = user.Id,
+        email = user.Email
+    });
+}
 
     private string GenerateJwtToken(AppUser user)
     {
