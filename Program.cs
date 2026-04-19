@@ -1,31 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Text;
-
-using Printawyapis.Data;
-using Printawyapis.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// =====================
 // DATABASE
-// =====================
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
-// =====================
 // IDENTITY
-// =====================
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// =====================
-// JWT AUTH
-// =====================
+// JWT
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -41,21 +25,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
-// =====================
 // AUTHORIZATION
-// =====================
 builder.Services.AddAuthorization();
 
-// =====================
 // CONTROLLERS
-// =====================
 builder.Services.AddControllers();
 
-// =====================
-// SWAGGER + JWT SUPPORT
-// =====================
-builder.Services.AddEndpointsApiExplorer();
+// CORS ✅ (MOVED HERE)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
+// SWAGGER
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -64,7 +52,6 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 
-    // 🔐 JWT AUTH CONFIG FOR SWAGGER
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -91,30 +78,16 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
 var app = builder.Build();
 
+// MIDDLEWARE
 
-
-// =====================
-// MIDDLEWARE PIPELINE
-// =====================
-
-// Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// Auth
+// ✅ USE CORS
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
